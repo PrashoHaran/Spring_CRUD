@@ -1,12 +1,10 @@
 package com.example.spring_boot_demo.controllers;
 
 import com.example.spring_boot_demo.entity.UserEntity;
-import com.example.spring_boot_demo.model.User;
 import com.example.spring_boot_demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -42,4 +40,13 @@ public class UserController {
     public Optional<UserEntity> getUserById(@PathVariable Long id){
         return userRepository.findById(id);
     }
+
+    //Update User API
+    @PutMapping("/{id}")
+    public Optional<UserEntity> updateUser (@PathVariable Long id, @RequestBody UserEntity user) {
+        return userRepository.findById(id);
+
+    }
+
+
 }
