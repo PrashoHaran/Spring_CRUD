@@ -3,6 +3,7 @@ package com.example.spring_boot_demo.controllers;
 import com.example.spring_boot_demo.entity.UserEntity;
 import com.example.spring_boot_demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -41,12 +42,37 @@ public class UserController {
         return userRepository.findById(id);
     }
 
-    //Update User API
+    // Update User API
     @PutMapping("/{id}")
-    public Optional<UserEntity> updateUser (@PathVariable Long id, @RequestBody UserEntity user) {
-        return userRepository.findById(id);
+    public ResponseEntity<UserEntity> updateUser(@PathVariable Long id, @RequestBody UserEntity userDetails) {
+        Optional<UserEntity> optionalUser = userRepository.findById(id);
 
+        if (optionalUser.isPresent()) {
+            UserEntity user = optionalUser.get();
+            user.setName(userDetails.getName());
+            user.setEmail(userDetails.getEmail());
+            // Add other fields you want to update
+
+            UserEntity updatedUser = userRepository.save(user);
+            return ResponseEntity.ok(updatedUser);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
+
+    // Delete User API
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteUser(@PathVariable Long id) {
+        Optional<UserEntity> optionalUser = userRepository.findById(id);
+
+        if (optionalUser.isPresent()) {
+            userRepository.deleteById(id);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 
 
 }
